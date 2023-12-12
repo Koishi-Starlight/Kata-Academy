@@ -40,11 +40,12 @@ func intToRoman(num int) string { //Arabic num to Roman num converter, using sub
 }
 func GetRomanResults(num1, num2, operator string) string { //Using roman map, passing value for calculation, passing result to converter
 	result := getIntResult(availableRoman[num1], availableRoman[num2], operator)
-	if result < 0 {
-		panic("The operation resulted with negative number")
+	if result <= 0 {
+		panic("The operation resulted with unsupported number")
 	}
 	return intToRoman(result)
 }
+
 var availableRoman = map[string]int{ // Map used for checking if entered number is available for use and convertion.
 	"I":    1,
 	"II":   2,
@@ -71,7 +72,7 @@ var availableInt = map[string]bool{ // Same as roman, except convertion
 }
 
 func main() {
-	reader := bufio.NewReader(os.Stdin) //Invoking a read from the console, based on OS standart input
+	reader := bufio.NewReader(os.Stdin) //read from the console, based on OS standart input
 	fmt.Println(`Enter mathematical operation in following format: "a + b, a - b, a * b, a / b".
 Available numbers (1,2,3,4,5… 10), (I,II,III,IV,V… X)
 Available operations: +, -, *, /.
@@ -83,9 +84,9 @@ Invalid operations;
 Example 1): I - X
 Example 2): 1 + V
 Example 3): 
-Note: Roman numbers don't have negatives, I - V would result in error.'`)
-	text, _ := reader.ReadString('\n')         //Awaiting input, string type
-	text = strings.TrimSpace(text)             //Removing \n from input ((Tbh idk how it works and why it doesn't remove spaces??))
+Note: Roman numbers don't have negatives or zero, V - V or I - X would result in error.'`)
+	text, _ := reader.ReadString('\n')         //Awaiting input
+	text = strings.TrimSpace(text)             //Removing \n from input
 	operationSlice := strings.Split(text, " ") //Making a slice, uses "spaces" as separator
 	if len(operationSlice) != 3 {              //Checks if you entered correct amount of arguments. 2 numbers and 1 operator
 		panic("Incorrect amount of arguments.")
@@ -104,7 +105,7 @@ Note: Roman numbers don't have negatives, I - V would result in error.'`)
 		fmt.Println("Result: ", GetRomanResults(num1, num2, operator))
 	} else if hasInt1 && hasInt2 {
 		convInt1, _ := strconv.Atoi(num1) // Int calculation part. I didn't use convertion then " if num > 0 && num < 11 " as checker,
-		convInt2, _ := strconv.Atoi(num2) // cuz only 10 numbers allowed, so I used a map instead.
+		convInt2, _ := strconv.Atoi(num2) // cuz only 10 numbers are allowed, so I used a map instead.
 		fmt.Println("Result: ", getIntResult(convInt1, convInt2, operator))
 
 	} else {
